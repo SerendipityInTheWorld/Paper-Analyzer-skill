@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "paper-analyzer-v2",
+  "title": "Paper Analysis Schema",
+  "description": "Single source of truth for the AI-parser-renderer contract. Every dimension has an id, canonical titles (zh/en), data type, and field definitions.",
+
+  "dimensions": {
+    "metadata": {
+      "id": "metadata",
+      "title_zh": "元数据",
+      "title_en": "Metadata",
+      "type": "narrative",
+      "fields": ["paragraphs", "bullets"],
+      "required": false,
+      "description": "Bullet list of paper metadata items"
+    },
+    "research_motivation": {
+      "id": "research_motivation",
+      "title_zh": "研究动机",
+      "title_en": "Research Motivation",
+      "type": "narrative",
+      "fields": ["paragraphs"],
+      "required": true,
+      "description": "Why the problem matters, what gap exists"
+    },
+    "problem_definition": {
+      "id": "problem_definition",
+      "title_zh": "问题定义",
+      "title_en": "Problem Definition",
+      "type": "narrative",
+      "fields": ["paragraphs", "bullets", "subsections"],
+      "required": true,
+      "description": "Core contradiction, existing limitations, key challenges"
+    },
+    "core_contributions": {
+      "id": "core_contributions",
+      "title_zh": "核心贡献",
+      "title_en": "Core Contributions",
+      "type": "contributions",
+      "fields": ["contributions"],
+      "required": true,
+      "item_schema": {
+        "claim": {"type": "string", "required": true},
+        "evidence_ref": {"type": "string", "required": false}
+      },
+      "format_hint": "Use: 1. **\"exact quote from paper\"** followed by Evidence: ... on next line"
+    },
+    "methodological_innovation": {
+      "id": "methodological_innovation",
+      "title_zh": "方法论创新",
+      "title_en": "Methodological Innovation",
+      "type": "narrative",
+      "fields": ["paragraphs", "subsections"],
+      "required": true,
+      "description": "Novel approach, technical design, design choices rationale"
+    },
+    "literature_analysis_framework": {
+      "id": "literature_analysis_framework",
+      "title_zh": "文献分析框架",
+      "title_en": "Literature Analysis Framework",
+      "type": "narrative",
+      "fields": ["paragraphs", "subsections"],
+      "required": false,
+      "description": "For review/survey papers: how the literature was organized and analyzed"
+    },
+    "experimental_framework": {
+      "id": "experimental_framework",
+      "title_zh": "实验框架",
+      "title_en": "Experimental Framework",
+      "type": "experiments",
+      "fields": ["experiments"],
+      "required": false,
+      "item_schema": {
+        "name": {"type": "string", "required": true},
+        "paragraph": {"type": "string", "required": false},
+        "what": {"type": "string", "required": false},
+        "question": {"type": "string", "required": false},
+        "setup": {"type": "string", "required": false},
+        "results": {"type": "string", "required": false},
+        "conclusion": {"type": "string", "required": false},
+        "evidence": {"type": "string", "required": false}
+      },
+      "format_hint": "Use **Experiment: Name** marker, then **What it did:** / **Question it answers:** / **Setup:** / **Results:** / **Conclusion:** / **Evidence strength:** fields"
+    },
+    "key_findings": {
+      "id": "key_findings",
+      "title_zh": "关键发现",
+      "title_en": "Key Findings",
+      "type": "narrative",
+      "fields": ["paragraphs", "bullets", "subsections", "tables"],
+      "required": false,
+      "description": "Main quantitative and qualitative results"
+    },
+    "limitations": {
+      "id": "limitations",
+      "title_zh": "局限性",
+      "title_en": "Limitations",
+      "type": "limitation_table",
+      "fields": ["paragraphs", "limitation_items"],
+      "required": false,
+      "item_schema": {
+        "text": {"type": "string", "required": true},
+        "acknowledged": {"type": "string", "enum": ["Yes", "No", "Partial"], "required": true},
+        "severity": {"type": "string", "enum": ["Critical", "Moderate", "Minor"], "required": true}
+      },
+      "table_headers": {
+        "en": ["Limitation", "Acknowledged", "Severity"],
+        "zh": ["局限性", "作者是否承认", "严重程度"]
+      },
+      "format_hint": "Use a markdown table with exactly 3 columns: Limitation | Acknowledged | Severity"
+    },
+    "future_work": {
+      "id": "future_work",
+      "title_zh": "未来展望",
+      "title_en": "Future Work",
+      "type": "narrative",
+      "fields": ["paragraphs", "bullets", "subsections"],
+      "required": false,
+      "description": "Three categories: explicitly suggested, implicit, potential extensions"
+    },
+    "quality_assessment": {
+      "id": "quality_assessment",
+      "title_zh": "质量评估",
+      "title_en": "Quality Assessment",
+      "type": "quality_items",
+      "fields": ["quality_items"],
+      "required": false,
+      "item_schema": {
+        "label": {"type": "string", "required": true},
+        "text": {"type": "string", "required": true}
+      },
+      "expected_labels": {
+        "en": ["Strengths", "Weaknesses", "Overall Soundness", "Reproducibility", "Significance"],
+        "zh": ["优势", "劣势", "整体稳健性", "可复现性", "学术意义"]
+      },
+      "format_hint": "Use bullets: - Strengths: ... / - Weaknesses: ... / - Overall Soundness: ... / - Reproducibility: ... / - Significance: ..."
+    }
+  },
+
+  "depth_modes": {
+    "quick": {
+      "description": "1 sentence per dimension, skip subsections",
+      "strictness": "lenient"
+    },
+    "standard": {
+      "description": "1 paragraph per dimension with evidence references",
+      "strictness": "normal"
+    },
+    "deep": {
+      "description": "Full narrative with critical evaluation, all subsections required",
+      "strictness": "strict"
+    }
+  }
+}
