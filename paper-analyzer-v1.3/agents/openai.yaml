@@ -1,0 +1,14 @@
+interface:
+  display_name: "Paper Analyzer"
+  short_description: >-
+    Analyze academic papers from PDF paths, Arxiv URLs, web links, or
+    direct text; output PDF / HTML / Markdown / JSON reports with structured
+    analysis across 11 dimensions.
+  brand_color: "#7C3AED"
+  default_prompt: >-
+    Use $paper-analyzer to analyze the paper at {source}. Follow the interactive
+    prompt in SKILL.md to choose language and output format, then run full analysis
+    via the md_to_report + generate_report pipeline.
+
+policy:
+  allow_implicit_invocation: true
